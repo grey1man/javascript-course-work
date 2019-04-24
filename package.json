@@ -1,0 +1,15 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "it is very hard for my dumb ass",
+  "main": "app.js",
+  "scripts": {
+    "test": "WHY?!"
+  },
+  "author": "grey_man",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4"
+  }
+}
