@@ -3,10 +3,13 @@ const bodyParser = require("body-parser");
 const math = require("C:/Users/grey man/AppData/Roaming/npm/node_modules/mathjs");
 const app = express();  
 const urlencodedParser = bodyParser.urlencoded({extended: false});
-var str = "3 * x + 2 = 7"
+var str = "2 - z = 7"
 str = str.split('=') 
 var node1 = math.parse(str[0])
 var node2 = math.parse(str[1])
+var counter = 0
+
+console.log(math.simplify(str[0]).toString())
 
 function inverse(op){
     switch (op) {
@@ -45,9 +48,18 @@ node1.traverse(function (node, path, parent) {
     case 'OperatorNode':
       console.log(node.type, node.op, path)
       console.log(node.clone())
-      if ((node.args[0].type == 'ConstantNode' || node.args[0].type == 'SymbolNode') && node.args[0].name != 'x') return node2 = new math.expression.node.OperatorNode(inverse(node.op), inverse(node.fn), [node2, node.args[0]])
-      if ((node.args[1].type == 'ConstantNode' || node.args[1].type == 'SymbolNode') && node.args[1].name != 'x') return node2 = new math.expression.node.OperatorNode(inverse(node.op), inverse(node.fn), [node2, node.args[1]])
-      node2 = math.parse(node2)
+      if ((node.args[0].type == 'ConstantNode' || node.args[0].type == 'SymbolNode') && node.args[0].name != 'z' && counter == 0){
+        node2 = new math.expression.node.OperatorNode(inverse(node.op), inverse(node.fn), [node2, node.args[0]])
+      }
+      if ((node.args[1].type == 'ConstantNode' || node.args[1].type == 'SymbolNode') && node.args[1].name != 'z' && counter == 0 ){ 
+        node2 = new math.expression.node.OperatorNode(inverse(node.op), inverse(node.fn), [node2, node.args[1]])
+      }
+      if (node.args[1].type == 'OperatorNode' && node.args[0].type == 'SymbolNode' && node.args[1].name != 'z'){
+        node2 = new math.expression.node.OperatorNode(inverse(node.op), inverse(node.fn), [node2, node.args[1]])
+      }
+      if (node.args[0].type == 'OperatorNode' && node.args[1].type == 'SymbolNode' && node.args[1].name != 'z'){
+        node2 = new math.expression.node.OperatorNode(inverse(node.op), inverse(node.fn), [node2, node.args[0]])
+      }
       console.log(' ')
       console.log(' ')
       break
@@ -75,7 +87,7 @@ console.log(' ')
 console.log(' ')
 console.log(' ')
 console.log(node2.toString())
-
+console.log(math.simplify(node2.toString()).toString())
 
 
 
