@@ -1,9 +1,9 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const math = require("C:/Users/grey man/AppData/Roaming/npm/node_modules/mathjs");
+const math = require("C:/users/bss/AppData/Roaming/npm/node_modules/mathjs");
 const app = express();  
 const urlencodedParser = bodyParser.urlencoded({extended: false});
-var str = "2 - z = 7"
+var str = "z + 1= 7"
 str = str.split('=') 
 var node1 = math.parse(str[0])
 var node2 = math.parse(str[1])
@@ -15,39 +15,43 @@ function inverse(op){
     switch (op) {
         case '+' :
         return '-'
-        break
         case '-' :
         return '+'
-        break
         case '*' :
         return '/'
-        break
         case '/' :
         return '*'
-        break
         case 'add' :
         return 'subtract'
-        break
         case 'multiply' :
         return 'divide'
-        break
         case 'divide' :
         return 'multiply'
         case 'subtract' :
         return 'add'
+        case 'unaryMinus' :
+        return 'unaryMinus'
     }
 }
 
 console.log('aaaa')
-console.log(math.parse('x - 1'))
+console.log(math.parse('-x'))
 console.log('aaaa')
 
 
 node1.traverse(function (node, path, parent) {
   switch (node.type) {
     case 'OperatorNode':
-      console.log(node.type, node.op, path)
+      console.log(node.type, node.op, path, node.args[0].fn)
       console.log(node.clone())
+      if (node.fn == 'unaryMinus'){
+        node2 = new math.expression.node.OperatorNode('-', inverse(node.fn), [node2])
+        return
+      }
+      if (node.fn == 'unaryMinus'){
+        node2 = new math.expression.node.OperatorNode('-', inverse(node.fn), [node2])
+        return
+      }
       if ((node.args[0].type == 'ConstantNode' || node.args[0].type == 'SymbolNode') && node.args[0].name != 'z' && counter == 0){
         node2 = new math.expression.node.OperatorNode(inverse(node.op), inverse(node.fn), [node2, node.args[0]])
       }
@@ -60,6 +64,8 @@ node1.traverse(function (node, path, parent) {
       if (node.args[0].type == 'OperatorNode' && node.args[1].type == 'SymbolNode' && node.args[1].name != 'z'){
         node2 = new math.expression.node.OperatorNode(inverse(node.op), inverse(node.fn), [node2, node.args[0]])
       }
+     
+     
       console.log(' ')
       console.log(' ')
       break
